@@ -2,6 +2,7 @@ import {
   getClock,
   getClockWrapper,
   getIncButtons,
+  getIncrementers,
   getStartStopButton,
 } from '~/src/logic/elements';
 import {
@@ -19,12 +20,14 @@ const onTogglePlay = () => {
   if (getTimerRef().isRunning) {
     setTimerIsRunning(false);
     startStop.textContent = '▶';
+    getIncrementers().style.display = 'flex';
   } else {
     setTimerIsRunning(true);
     // Not super accurate but whatever
     const timeRemaining = timeToMs(getClock().textContent!);
     setStart(Date.now() - (getClockLength() - timeRemaining));
     startStop.textContent = 'II';
+    getIncrementers().style.display = 'none';
   }
 };
 

@@ -25,6 +25,15 @@ h6 {
   padding: 0;
 }
 
+button {
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  user-select: none;
+}
+
 #content {
   display: flex;
   flex-direction: column;
@@ -73,25 +82,39 @@ h6 {
 
 .inc {
   transform: rotate(90deg);
+  box-shadow: 2px -2px grey;
+}
+
+.inc:hover {
+  transform: rotate(90deg) translate(-1px, 1px);
+  box-shadow: 3px -3px grey;
+}
+
+.inc:active {
+  transform: rotate(90deg) translate(0);
+  box-shadow: 2px -2px grey;
 }
 
 .dec {
   transform: rotate(270deg);
+  box-shadow: -2px 2px grey;
 }
 
-button {
-  height: 2.5rem;
-  width: 2.5rem;
-  background-color: transparent;
-  border: 1px solid black;
-  cursor: pointer;
-  user-select: none;
+.dec:hover {
+  transform: rotate(270deg) translate(1px, -1px);
+  box-shadow: -3px 3px grey;
+}
+
+.dec:active {
+  transform: rotate(270deg) translate(0);
+  box-shadow: -2px 2px grey;
 }
 
 #start-stop-button {
   box-shadow: 2px 2px grey;
   font-weight: bold;
   font-family: sans-serif;
+  width: 4rem;
 }
 
 #start-stop-button:hover {

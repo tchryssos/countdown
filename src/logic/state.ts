@@ -4,7 +4,7 @@ let start = Date.now();
 export const getStart = () => start;
 export const setStart = (newTime: number) => (start = newTime);
 
-let clockLength = minutesToMillis(0.1);
+let clockLength = minutesToMillis(15);
 export const getClockLength = () => clockLength;
 export const setClockLength = (newLength: number) => (clockLength = newLength);
 
