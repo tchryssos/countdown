@@ -20,7 +20,7 @@ if (content && clock && clockWrapper) {
 
       if (timeRemaining <= 0) {
         setTimerIsRunning(false);
-        content!.style.backgroundColor = '#000';
+        document.body.style.backgroundColor = '#000';
       } else {
         const percRemaining = (timeRemaining / totalTime) * 100;
 
