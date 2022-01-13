@@ -27,6 +27,7 @@ h6 {
 
 #content {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -37,11 +38,31 @@ h6 {
 #clock-wrapper {
   border: 1px solid black;
   padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 #clock {
   font-size: 20vw;
   font-family: initial;
+}
+
+#controls {
+  display: flex;
+  width: 100%;
+}
+
+#start-stop-button {
+  height: 2.5rem;
+  width: 3rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+  box-shadow: 2px 2px grey;
+}
+
+#start-stop-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px grey;
 }
 
 /*# sourceMappingURL=index.7276f67c.css.map */
