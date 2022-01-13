@@ -463,18 +463,23 @@ var _elements = require("~/src/logic/elements");
 var _state = require("./logic/state");
 var _util = require("./logic/util");
 const onTogglePlay = ()=>{
-    if (_state.getTimerRef().isRunning) _state.setTimerIsRunning(false);
-    else {
+    const startStop = _elements.getStartStopButton();
+    if (_state.getTimerRef().isRunning) {
+        _state.setTimerIsRunning(false);
+        startStop.textContent = '▶';
+    } else {
         _state.setTimerIsRunning(true);
         // Not super accurate but whatever
         const timeRemaining = _util.timeToMs(_elements.getClock().textContent);
         _state.setStart(Date.now() - (_state.getClockLength() - timeRemaining));
+        startStop.textContent = 'II';
     }
 };
 // SETUP INITIAL STATE
 _elements.getClock().textContent = _util.msToTime(_state.getClockLength());
-_elements.getStartStopButton().textContent = _state.getTimerRef().isRunning ? '||' : '▶';
-_elements.getStartStopButton().addEventListener('click', onTogglePlay);
+const startStop = _elements.getStartStopButton();
+startStop.textContent = _state.getTimerRef().isRunning ? 'II' : '▶';
+startStop.addEventListener('click', onTogglePlay);
 // SETUP CLOCK INTERVAL
 setInterval(()=>{
     if (_state.getTimerRef().isRunning) {
@@ -485,6 +490,10 @@ setInterval(()=>{
         if (timeRemaining <= 0) {
             _state.setTimerIsRunning(false);
             document.body.style.backgroundColor = '#000';
+            const startStop = _elements.getStartStopButton();
+            startStop.style.boxShadow = 'none';
+            startStop.style.cursor = 'default';
+            startStop.removeEventListener('click', onTogglePlay);
         } else {
             const percRemaining = timeRemaining / totalTime * 100;
             _elements.getClock().textContent = _util.msToTime(timeRemaining);
@@ -492,7 +501,6 @@ setInterval(()=>{
             const colorString = `hsl(7, ${Math.round(100 - percRemaining)}%, ${Math.round((100 - percRemaining) / 2)}%)`;
             _elements.getClock().style.color = colorString;
             _elements.getClockWrapper().style.borderColor = `rgba(0, 0, 0, ${percRemaining / 100})`;
-            _elements.getStartStopButton().textContent = _state.getTimerRef().isRunning ? '||' : '▶';
         }
     }
 }, 333);
@@ -581,7 +589,7 @@ const getTimerRef = ()=>timerRef
 const setTimerIsRunning = (isRunning)=>timerRef.isRunning = isRunning
 ;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn","./util":"hzNF8"}],"hzNF8":[function(require,module,exports) {
+},{"./util":"hzNF8","@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn"}],"hzNF8":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "minutesToMillis", ()=>minutesToMillis
