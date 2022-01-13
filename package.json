@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "A basic parcel project",
   "source": "src/index.html",
+  "homepage": ".",
   "scripts": {
     "dev": "parcel",
     "build": "rm -rf dist && parcel build --public-url ./",
