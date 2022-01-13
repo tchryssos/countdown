@@ -462,41 +462,60 @@ function hmrAcceptRun(bundle, id) {
 var _elements = require("~/src/logic/elements");
 var _state = require("./logic/state");
 var _util = require("./logic/util");
-if (_elements.content && _elements.clock && _elements.clockWrapper) {
-    _elements.clock.textContent = _util.msToTime(_state.getClockLength());
-    setInterval(()=>{
-        if (_state.getTimerRef().isRunning) {
-            const start = _state.getStart();
-            const now = Date.now();
-            const totalTime = _state.getClockLength();
-            const timeRemaining = totalTime - (now - start);
-            if (timeRemaining <= 0) {
-                _state.setTimerIsRunning(false);
-                document.body.style.backgroundColor = '#000';
-            } else {
-                const percRemaining = timeRemaining / totalTime * 100;
-                _elements.clock.textContent = _util.msToTime(timeRemaining);
-                // Color approaches red from black as time decreases
-                const colorString = `hsl(7, ${Math.round(100 - percRemaining)}%, ${Math.round((100 - percRemaining) / 2)}%)`;
-                _elements.clock.style.color = colorString;
-                _elements.clockWrapper.style.borderColor = `rgba(0, 0, 0, ${percRemaining / 100})`;
-            }
+const onTogglePlay = ()=>{
+    if (_state.getTimerRef().isRunning) _state.setTimerIsRunning(false);
+    else {
+        _state.setTimerIsRunning(true);
+        // Not super accurate but whatever
+        const timeRemaining = _util.timeToMs(_elements.getClock().textContent);
+        _state.setStart(Date.now() - (_state.getClockLength() - timeRemaining));
+    }
+};
+// SETUP INITIAL STATE
+_elements.getClock().textContent = _util.msToTime(_state.getClockLength());
+_elements.getStartStopButton().textContent = _state.getTimerRef().isRunning ? '||' : '▶';
+_elements.getStartStopButton().addEventListener('click', onTogglePlay);
+// SETUP CLOCK INTERVAL
+setInterval(()=>{
+    if (_state.getTimerRef().isRunning) {
+        const start = _state.getStart();
+        const now = Date.now();
+        const totalTime = _state.getClockLength();
+        const timeRemaining = totalTime - (now - start);
+        if (timeRemaining <= 0) {
+            _state.setTimerIsRunning(false);
+            document.body.style.backgroundColor = '#000';
+        } else {
+            const percRemaining = timeRemaining / totalTime * 100;
+            _elements.getClock().textContent = _util.msToTime(timeRemaining);
+            // Color approaches red from black as time decreases
+            const colorString = `hsl(7, ${Math.round(100 - percRemaining)}%, ${Math.round((100 - percRemaining) / 2)}%)`;
+            _elements.getClock().style.color = colorString;
+            _elements.getClockWrapper().style.borderColor = `rgba(0, 0, 0, ${percRemaining / 100})`;
+            _elements.getStartStopButton().textContent = _state.getTimerRef().isRunning ? '||' : '▶';
         }
-    }, 500);
-}
+    }
+}, 333);
 
 },{"~/src/logic/elements":"gFTi2","./logic/state":"jBch4","./logic/util":"hzNF8"}],"gFTi2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "content", ()=>content
+parcelHelpers.export(exports, "getContent", ()=>getContent
 );
-parcelHelpers.export(exports, "clockWrapper", ()=>clockWrapper
+parcelHelpers.export(exports, "getClockWrapper", ()=>getClockWrapper
 );
-parcelHelpers.export(exports, "clock", ()=>clock
+parcelHelpers.export(exports, "getClock", ()=>getClock
 );
-const content = document.getElementById('content');
-const clockWrapper = document.getElementById('clock-wrapper');
-const clock = document.getElementById('clock');
+parcelHelpers.export(exports, "getStartStopButton", ()=>getStartStopButton
+);
+const getContent = ()=>document.getElementById('content')
+;
+const getClockWrapper = ()=>document.getElementById('clock-wrapper')
+;
+const getClock = ()=>document.getElementById('clock')
+;
+const getStartStopButton = ()=>document.getElementById('start-stop-button')
+;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn"}],"hpGyn":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -533,7 +552,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getStart", ()=>getStart
 );
-parcelHelpers.export(exports, "setState", ()=>setState
+parcelHelpers.export(exports, "setStart", ()=>setStart
 );
 parcelHelpers.export(exports, "getClockLength", ()=>getClockLength
 );
@@ -547,7 +566,7 @@ var _util = require("./util");
 let start = Date.now();
 const getStart = ()=>start
 ;
-const setState = (newTime)=>start = newTime
+const setStart = (newTime)=>start = newTime
 ;
 let clockLength = _util.minutesToMillis(0.1);
 const getClockLength = ()=>clockLength
@@ -555,7 +574,7 @@ const getClockLength = ()=>clockLength
 const setClockLength = (newLength)=>clockLength = newLength
 ;
 let timerRef = {
-    isRunning: true
+    isRunning: false
 };
 const getTimerRef = ()=>timerRef
 ;
@@ -569,6 +588,8 @@ parcelHelpers.export(exports, "minutesToMillis", ()=>minutesToMillis
 );
 parcelHelpers.export(exports, "msToTime", ()=>msToTime
 );
+parcelHelpers.export(exports, "timeToMs", ()=>timeToMs
+);
 const minutesToMillis = (minutes)=>minutes * 60000
 ;
 const msToTime = (ms)=>{
@@ -581,6 +602,10 @@ const msToTime = (ms)=>{
     seconds = seconds < 10 ? '0' + seconds : seconds;
     // centiseconds = centiseconds < 10 ? '0' + centiseconds : centiseconds;
     return hours + ':' + minutes + ':' + seconds;
+};
+const timeToMs = (timeString)=>{
+    const [hrs, mins, secs] = timeString.split(':');
+    return parseInt(hrs, 10) * 3600000 + parseInt(mins, 10) * 60000 + parseInt(secs, 10) * 1000;
 };
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn"}]},["50nWJ","jZgE0"], "jZgE0", "parcelRequire9b17")

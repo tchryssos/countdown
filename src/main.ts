@@ -1,39 +1,58 @@
-import { content, clock, clockWrapper } from '~/src/logic/elements';
+import {
+  getClock,
+  getClockWrapper,
+  getStartStopButton,
+} from '~/src/logic/elements';
 import {
   getStart,
   getClockLength,
   getTimerRef,
   setTimerIsRunning,
+  setStart,
 } from './logic/state';
-import { msToTime } from './logic/util';
+import { msToTime, timeToMs } from './logic/util';
 
-if (content && clock && clockWrapper) {
-  clock!.textContent = msToTime(getClockLength());
+const onTogglePlay = () => {
+  if (getTimerRef().isRunning) {
+    setTimerIsRunning(false);
+  } else {
+    setTimerIsRunning(true);
+    // Not super accurate but whatever
+    const timeRemaining = timeToMs(getClock().textContent!);
+    setStart(Date.now() - (getClockLength() - timeRemaining));
+  }
+};
 
-  setInterval(() => {
-    if (getTimerRef().isRunning) {
-      const start = getStart();
-      const now = Date.now();
-      const totalTime = getClockLength();
+// SETUP INITIAL STATE
+getClock().textContent = msToTime(getClockLength());
+getStartStopButton().textContent = getTimerRef().isRunning ? '||' : '▶';
+getStartStopButton().addEventListener('click', onTogglePlay);
 
-      const timeRemaining = totalTime - (now - start);
+// SETUP CLOCK INTERVAL
+setInterval(() => {
+  if (getTimerRef().isRunning) {
+    const start = getStart();
+    const now = Date.now();
+    const totalTime = getClockLength();
 
-      if (timeRemaining <= 0) {
-        setTimerIsRunning(false);
-        document.body.style.backgroundColor = '#000';
-      } else {
-        const percRemaining = (timeRemaining / totalTime) * 100;
+    const timeRemaining = totalTime - (now - start);
 
-        clock!.textContent = msToTime(timeRemaining);
-        // Color approaches red from black as time decreases
-        const colorString = `hsl(7, ${Math.round(
-          100 - percRemaining
-        )}%, ${Math.round((100 - percRemaining) / 2)}%)`;
-        clock!.style.color = colorString;
-        clockWrapper!.style.borderColor = `rgba(0, 0, 0, ${
-          percRemaining / 100
-        })`;
-      }
+    if (timeRemaining <= 0) {
+      setTimerIsRunning(false);
+      document.body.style.backgroundColor = '#000';
+    } else {
+      const percRemaining = (timeRemaining / totalTime) * 100;
+
+      getClock().textContent = msToTime(timeRemaining);
+      // Color approaches red from black as time decreases
+      const colorString = `hsl(7, ${Math.round(
+        100 - percRemaining
+      )}%, ${Math.round((100 - percRemaining) / 2)}%)`;
+      getClock().style.color = colorString;
+      getClockWrapper().style.borderColor = `rgba(0, 0, 0, ${
+        percRemaining / 100
+      })`;
+      getStartStopButton().textContent = getTimerRef().isRunning ? '||' : '▶';
     }
-  }, 500);
-}
+  }
+}, 333);

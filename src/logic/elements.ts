@@ -1,5 +1,8 @@
-export const content = document.getElementById('content');
+export const getContent = () => document.getElementById('content');
 
-export const clockWrapper = document.getElementById('clock-wrapper');
+export const getClockWrapper = () => document.getElementById('clock-wrapper')!;
 
-export const clock = document.getElementById('clock');
+export const getClock = () => document.getElementById('clock')!;
+
+export const getStartStopButton = () =>
+  document.getElementById('start-stop-button')!;

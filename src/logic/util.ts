@@ -14,3 +14,13 @@ export const msToTime = (ms: number) => {
 
   return hours + ':' + minutes + ':' + seconds;
 };
+
+export const timeToMs = (timeString: string) => {
+  const [hrs, mins, secs] = timeString.split(':');
+
+  return (
+    parseInt(hrs, 10) * 60 * 60 * 1000 +
+    parseInt(mins, 10) * 60 * 1000 +
+    parseInt(secs, 10) * 1000
+  );
+};
