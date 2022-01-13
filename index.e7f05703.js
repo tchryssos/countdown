@@ -462,16 +462,27 @@ function hmrAcceptRun(bundle, id) {
 var _elements = require("~/src/logic/elements");
 var _state = require("./logic/state");
 var _util = require("./logic/util");
-if (_elements.content && _elements.clock) {
+if (_elements.content && _elements.clock && _elements.clockWrapper) {
     _elements.clock.textContent = _util.msToTime(_state.getClockLength());
     setInterval(()=>{
         if (_state.getTimerRef().isRunning) {
             const start = _state.getStart();
             const now = Date.now();
-            const timeRemaining = _state.getClockLength() - (now - start);
-            _elements.clock.textContent = _util.msToTime(timeRemaining);
+            const totalTime = _state.getClockLength();
+            const timeRemaining = totalTime - (now - start);
+            if (timeRemaining <= 0) {
+                _state.setTimerIsRunning(false);
+                _elements.content.style.backgroundColor = '#000';
+            } else {
+                const percRemaining = timeRemaining / totalTime * 100;
+                _elements.clock.textContent = _util.msToTime(timeRemaining);
+                // Color approaches red from black as time decreases
+                const colorString = `hsl(7, ${Math.round(100 - percRemaining)}%, ${Math.round((100 - percRemaining) / 2)}%)`;
+                _elements.clock.style.color = colorString;
+                _elements.clockWrapper.style.borderColor = `rgba(0, 0, 0, ${percRemaining / 100})`;
+            }
         }
-    }, 1000);
+    }, 500);
 }
 
 },{"~/src/logic/elements":"gFTi2","./logic/state":"jBch4","./logic/util":"hzNF8"}],"gFTi2":[function(require,module,exports) {
@@ -538,13 +549,13 @@ const getStart = ()=>start
 ;
 const setState = (newTime)=>start = newTime
 ;
-let clockLength = _util.minutesToMillis(20);
+let clockLength = _util.minutesToMillis(0.5);
 const getClockLength = ()=>clockLength
 ;
 const setClockLength = (newLength)=>clockLength = newLength
 ;
 let timerRef = {
-    isRunning: false
+    isRunning: true
 };
 const getTimerRef = ()=>timerRef
 ;

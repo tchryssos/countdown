@@ -31,6 +31,7 @@ h6 {
   justify-content: center;
   width: 100%;
   height: 100%;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 #clock-wrapper {
@@ -39,7 +40,8 @@ h6 {
 }
 
 #clock {
-  font-size: 10rem;
+  font-size: 20vw;
+  font-family: initial;
 }
 
 /*# sourceMappingURL=index.7276f67c.css.map */
