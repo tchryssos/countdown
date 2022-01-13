@@ -468,12 +468,14 @@ const onTogglePlay = ()=>{
     if (_state.getTimerRef().isRunning) {
         _state.setTimerIsRunning(false);
         startStop.textContent = '▶';
+        _elements.getIncrementers().style.display = 'flex';
     } else {
         _state.setTimerIsRunning(true);
         // Not super accurate but whatever
         const timeRemaining = _util.timeToMs(_elements.getClock().textContent);
         _state.setStart(Date.now() - (_state.getClockLength() - timeRemaining));
         startStop.textContent = 'II';
+        _elements.getIncrementers().style.display = 'none';
     }
 };
 const createOnIncOrDec = (unit, operation)=>()=>{
@@ -533,6 +535,8 @@ parcelHelpers.export(exports, "getClock", ()=>getClock
 );
 parcelHelpers.export(exports, "getStartStopButton", ()=>getStartStopButton
 );
+parcelHelpers.export(exports, "getIncrementers", ()=>getIncrementers
+);
 parcelHelpers.export(exports, "getIncButtons", ()=>getIncButtons
 );
 const getContent = ()=>document.getElementById('content')
@@ -542,6 +546,8 @@ const getClockWrapper = ()=>document.getElementById('clock-wrapper')
 const getClock = ()=>document.getElementById('clock')
 ;
 const getStartStopButton = ()=>document.getElementById('start-stop-button')
+;
+const getIncrementers = ()=>document.getElementById('incrementers')
 ;
 const getIncButtons = ()=>document.getElementsByClassName('inc-button')
 ;
@@ -597,7 +603,7 @@ const getStart = ()=>start
 ;
 const setStart = (newTime)=>start = newTime
 ;
-let clockLength = _util.minutesToMillis(0.1);
+let clockLength = _util.minutesToMillis(15);
 const getClockLength = ()=>clockLength
 ;
 const setClockLength = (newLength)=>clockLength = newLength
