@@ -462,6 +462,7 @@ function hmrAcceptRun(bundle, id) {
 var _elements = require("~/src/logic/elements");
 var _state = require("./logic/state");
 var _util = require("./logic/util");
+// ON CLICKS
 const onTogglePlay = ()=>{
     const startStop = _elements.getStartStopButton();
     if (_state.getTimerRef().isRunning) {
@@ -475,11 +476,27 @@ const onTogglePlay = ()=>{
         startStop.textContent = 'II';
     }
 };
+const createOnIncOrDec = (unit, operation)=>()=>{
+        const clock = _elements.getClock();
+        const [hr, min, sec] = clock.textContent.split(':');
+        const timeObj = {
+            hr: parseInt(hr, 10),
+            min: parseInt(min, 10),
+            sec: parseInt(sec, 10)
+        };
+        const nextVal = operation === '+' ? timeObj[unit] + 1 : timeObj[unit] - 1;
+        timeObj[unit] = nextVal > 59 ? 0 : nextVal < 0 ? 59 : nextVal;
+        clock.textContent = Object.keys(timeObj).map((unit)=>`${timeObj[unit] < 10 ? '0' : ''}${timeObj[unit]}`
+        ).join(':');
+    }
+;
 // SETUP INITIAL STATE
 _elements.getClock().textContent = _util.msToTime(_state.getClockLength());
 const startStop = _elements.getStartStopButton();
 startStop.textContent = _state.getTimerRef().isRunning ? 'II' : '▶';
 startStop.addEventListener('click', onTogglePlay);
+Array.from(_elements.getIncButtons()).forEach((b, i)=>b.addEventListener('click', createOnIncOrDec(i < 2 ? 'hr' : i < 4 ? 'min' : 'sec', i % 2 === 0 ? '+' : '-'))
+);
 // SETUP CLOCK INTERVAL
 setInterval(()=>{
     if (_state.getTimerRef().isRunning) {
@@ -516,6 +533,8 @@ parcelHelpers.export(exports, "getClock", ()=>getClock
 );
 parcelHelpers.export(exports, "getStartStopButton", ()=>getStartStopButton
 );
+parcelHelpers.export(exports, "getIncButtons", ()=>getIncButtons
+);
 const getContent = ()=>document.getElementById('content')
 ;
 const getClockWrapper = ()=>document.getElementById('clock-wrapper')
@@ -523,6 +542,8 @@ const getClockWrapper = ()=>document.getElementById('clock-wrapper')
 const getClock = ()=>document.getElementById('clock')
 ;
 const getStartStopButton = ()=>document.getElementById('start-stop-button')
+;
+const getIncButtons = ()=>document.getElementsByClassName('inc-button')
 ;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn"}],"hpGyn":[function(require,module,exports) {

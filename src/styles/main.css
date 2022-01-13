@@ -48,17 +48,48 @@ h6 {
 
 #controls {
   display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
-#start-stop-button {
+#incrementers {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.inc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 33%;
+  align-items: center;
+}
+
+.inc-button {
+  font-size: 1.5rem;
+}
+
+.inc {
+  transform: rotate(90deg);
+}
+
+.dec {
+  transform: rotate(270deg);
+}
+
+button {
   height: 2.5rem;
   width: 2.5rem;
   background-color: transparent;
   border: 1px solid black;
   cursor: pointer;
-  box-shadow: 2px 2px grey;
   user-select: none;
+}
+
+#start-stop-button {
+  box-shadow: 2px 2px grey;
   font-weight: bold;
   font-family: sans-serif;
 }
@@ -66,4 +97,9 @@ h6 {
 #start-stop-button:hover {
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px grey;
+}
+
+#start-stop-button:active {
+  transform: translate(0);
+  box-shadow: 2px 2px grey;
 }

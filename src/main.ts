@@ -1,6 +1,7 @@
 import {
   getClock,
   getClockWrapper,
+  getIncButtons,
   getStartStopButton,
 } from '~/src/logic/elements';
 import {
@@ -12,6 +13,7 @@ import {
 } from './logic/state';
 import { msToTime, timeToMs } from './logic/util';
 
+// ON CLICKS
 const onTogglePlay = () => {
   const startStop = getStartStopButton();
   if (getTimerRef().isRunning) {
@@ -26,11 +28,43 @@ const onTogglePlay = () => {
   }
 };
 
+type TimeUnit = 'hr' | 'min' | 'sec';
+const createOnIncOrDec = (unit: TimeUnit, operation: '+' | '-') => () => {
+  const clock = getClock();
+  const [hr, min, sec] = clock.textContent!.split(':');
+  const timeObj: Record<TimeUnit, number> = {
+    hr: parseInt(hr, 10),
+    min: parseInt(min, 10),
+    sec: parseInt(sec, 10),
+  };
+
+  const nextVal = operation === '+' ? timeObj[unit] + 1 : timeObj[unit] - 1;
+  timeObj[unit] = nextVal > 59 ? 0 : nextVal < 0 ? 59 : nextVal;
+
+  clock.textContent = Object.keys(timeObj)
+    .map(
+      (unit) =>
+        `${timeObj[unit as TimeUnit] < 10 ? '0' : ''}${
+          timeObj[unit as TimeUnit]
+        }`
+    )
+    .join(':');
+};
+
 // SETUP INITIAL STATE
 getClock().textContent = msToTime(getClockLength());
 const startStop = getStartStopButton();
 startStop.textContent = getTimerRef().isRunning ? 'II' : '▶';
 startStop.addEventListener('click', onTogglePlay);
+Array.from(getIncButtons()).forEach((b, i) =>
+  b.addEventListener(
+    'click',
+    createOnIncOrDec(
+      i < 2 ? 'hr' : i < 4 ? 'min' : 'sec',
+      i % 2 === 0 ? '+' : '-'
+    )
+  )
+);
 
 // SETUP CLOCK INTERVAL
 setInterval(() => {

@@ -6,3 +6,6 @@ export const getClock = () => document.getElementById('clock')!;
 
 export const getStartStopButton = () =>
   document.getElementById('start-stop-button')!;
+
+export const getIncButtons = () =>
+  document.getElementsByClassName('inc-button');
