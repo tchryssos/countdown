@@ -13,20 +13,24 @@ import {
 import { msToTime, timeToMs } from './logic/util';
 
 const onTogglePlay = () => {
+  const startStop = getStartStopButton();
   if (getTimerRef().isRunning) {
     setTimerIsRunning(false);
+    startStop.textContent = '▶';
   } else {
     setTimerIsRunning(true);
     // Not super accurate but whatever
     const timeRemaining = timeToMs(getClock().textContent!);
     setStart(Date.now() - (getClockLength() - timeRemaining));
+    startStop.textContent = 'II';
   }
 };
 
 // SETUP INITIAL STATE
 getClock().textContent = msToTime(getClockLength());
-getStartStopButton().textContent = getTimerRef().isRunning ? '||' : '▶';
-getStartStopButton().addEventListener('click', onTogglePlay);
+const startStop = getStartStopButton();
+startStop.textContent = getTimerRef().isRunning ? 'II' : '▶';
+startStop.addEventListener('click', onTogglePlay);
 
 // SETUP CLOCK INTERVAL
 setInterval(() => {
@@ -40,6 +44,10 @@ setInterval(() => {
     if (timeRemaining <= 0) {
       setTimerIsRunning(false);
       document.body.style.backgroundColor = '#000';
+      const startStop = getStartStopButton();
+      startStop.style.boxShadow = 'none';
+      startStop.style.cursor = 'default';
+      startStop.removeEventListener('click', onTogglePlay);
     } else {
       const percRemaining = (timeRemaining / totalTime) * 100;
 
@@ -52,7 +60,6 @@ setInterval(() => {
       getClockWrapper().style.borderColor = `rgba(0, 0, 0, ${
         percRemaining / 100
       })`;
-      getStartStopButton().textContent = getTimerRef().isRunning ? '||' : '▶';
     }
   }
 }, 333);

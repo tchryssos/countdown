@@ -53,11 +53,14 @@ h6 {
 
 #start-stop-button {
   height: 2.5rem;
-  width: 3rem;
+  width: 2.5rem;
   background-color: transparent;
   border: 1px solid black;
   cursor: pointer;
   box-shadow: 2px 2px grey;
+  user-select: none;
+  font-weight: bold;
+  font-family: sans-serif;
 }
 
 #start-stop-button:hover {
