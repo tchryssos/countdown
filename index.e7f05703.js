@@ -472,7 +472,7 @@ if (_elements.content && _elements.clock && _elements.clockWrapper) {
             const timeRemaining = totalTime - (now - start);
             if (timeRemaining <= 0) {
                 _state.setTimerIsRunning(false);
-                _elements.content.style.backgroundColor = '#000';
+                document.body.style.backgroundColor = '#000';
             } else {
                 const percRemaining = timeRemaining / totalTime * 100;
                 _elements.clock.textContent = _util.msToTime(timeRemaining);
@@ -549,7 +549,7 @@ const getStart = ()=>start
 ;
 const setState = (newTime)=>start = newTime
 ;
-let clockLength = _util.minutesToMillis(0.5);
+let clockLength = _util.minutesToMillis(0.1);
 const getClockLength = ()=>clockLength
 ;
 const setClockLength = (newLength)=>clockLength = newLength
