@@ -1,18 +1,43 @@
-html, body {
-	height: 100%;
-	margin: 0;
-	padding: 0;
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-	position: relative;
+  position: relative;
 }
 
-div, a {
-	box-sizing: border-box;
+div,
+a {
+  box-sizing: border-box;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
-	margin: 0;
-	padding: 0;
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+#content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+#clock-wrapper {
+  border: 1px solid black;
+  padding: 1rem;
+}
+
+#clock {
+  font-size: 10rem;
 }

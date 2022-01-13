@@ -460,14 +460,32 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"jZgE0":[function(require,module,exports) {
 var _elements = require("~/src/logic/elements");
-if (_elements.content) _elements.content.textContent = 'TEMPLATE WORKS!';
+var _state = require("./logic/state");
+var _util = require("./logic/util");
+if (_elements.content && _elements.clock) {
+    _elements.clock.textContent = _util.msToTime(_state.getClockLength());
+    setInterval(()=>{
+        if (_state.getTimerRef().isRunning) {
+            const start = _state.getStart();
+            const now = Date.now();
+            const timeRemaining = _state.getClockLength() - (now - start);
+            _elements.clock.textContent = _util.msToTime(timeRemaining);
+        }
+    }, 1000);
+}
 
-},{"~/src/logic/elements":"gFTi2"}],"gFTi2":[function(require,module,exports) {
+},{"~/src/logic/elements":"gFTi2","./logic/state":"jBch4","./logic/util":"hzNF8"}],"gFTi2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "content", ()=>content
 );
+parcelHelpers.export(exports, "clockWrapper", ()=>clockWrapper
+);
+parcelHelpers.export(exports, "clock", ()=>clock
+);
 const content = document.getElementById('content');
+const clockWrapper = document.getElementById('clock-wrapper');
+const clock = document.getElementById('clock');
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn"}],"hpGyn":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -499,6 +517,61 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["50nWJ","jZgE0"], "jZgE0", "parcelRequire9b17")
+},{}],"jBch4":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getStart", ()=>getStart
+);
+parcelHelpers.export(exports, "setState", ()=>setState
+);
+parcelHelpers.export(exports, "getClockLength", ()=>getClockLength
+);
+parcelHelpers.export(exports, "setClockLength", ()=>setClockLength
+);
+parcelHelpers.export(exports, "getTimerRef", ()=>getTimerRef
+);
+parcelHelpers.export(exports, "setTimerIsRunning", ()=>setTimerIsRunning
+);
+var _util = require("./util");
+let start = Date.now();
+const getStart = ()=>start
+;
+const setState = (newTime)=>start = newTime
+;
+let clockLength = _util.minutesToMillis(20);
+const getClockLength = ()=>clockLength
+;
+const setClockLength = (newLength)=>clockLength = newLength
+;
+let timerRef = {
+    isRunning: false
+};
+const getTimerRef = ()=>timerRef
+;
+const setTimerIsRunning = (isRunning)=>timerRef.isRunning = isRunning
+;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn","./util":"hzNF8"}],"hzNF8":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "minutesToMillis", ()=>minutesToMillis
+);
+parcelHelpers.export(exports, "msToTime", ()=>msToTime
+);
+const minutesToMillis = (minutes)=>minutes * 60000
+;
+const msToTime = (ms)=>{
+    // let centiseconds: string | number = Math.floor((ms % 1000) / 10);
+    let seconds = Math.floor(ms / 1000 % 60);
+    let minutes = Math.floor(ms / 60000 % 60);
+    let hours = Math.floor(ms / 3600000 % 24);
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    // centiseconds = centiseconds < 10 ? '0' + centiseconds : centiseconds;
+    return hours + ':' + minutes + ':' + seconds;
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"hpGyn"}]},["50nWJ","jZgE0"], "jZgE0", "parcelRequire9b17")
 
 //# sourceMappingURL=index.e7f05703.js.map
